@@ -1,9 +1,8 @@
 package main
 
-import(
+import (
 	"flag"
-	"github.com/jakenocentino/gocrawl/url_frontier"
-	"github.com/jakenocentino/gocrawl/html_downloader"
+	"github.com/jakenocentino/gocrawl"
 )
 
 func main() {
@@ -11,9 +10,6 @@ func main() {
 	seedUrl := flag.String("seed-url", "https://www.nocentino.dev", "The seed url used to instantiate the web crawling process")
 	flag.Parse()
 
-	urlfrontier, _ := url_frontier.New()
-	urlfrontier.AddUrl(*seedUrl)
-
-	htmldownloader, _ := html_downloader.New("downloads")
-	htmldownloader.Download(*seedUrl)
+	crawler, _ := gocrawl.New(3)
+	crawler.Crawl(*seedUrl)
 }
