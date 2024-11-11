@@ -1,4 +1,4 @@
-package url_frontier
+package urlfrontier
 
 import (
 	"errors"
@@ -14,6 +14,7 @@ type Queue interface {
 // Main struct to represent our UrlFrontier (queue) to be used in implementation
 type UrlFrontier struct {
 	queue Queue
+	visited map[string]bool
 }
 
 // InMemoryQueue struct to implemenet the Queue interface. We choose a doubly
@@ -69,19 +70,35 @@ func New() (*UrlFrontier, error) {
 	q := &InMemoryQueue{MaxSize: 100000}
 	return &UrlFrontier{
 		queue: q,
+		visited: make(map[string]bool),
 	}, nil
 }
 
-func (url_frontier *UrlFrontier) AddUrl(url string) error {
-	url_frontier.queue.AddUrl(url)
+func (urlFrontier *UrlFrontier) AddUrl(url string) error {
+	if urlFrontier.visited[url] {
+		return nil
+	}
+	urlFrontier.queue.AddUrl(url)
+	urlFrontier.visited[url] = true
 	return nil
 }
 
-func (url_frontier *UrlFrontier) PopUrl() error {
-	url_frontier.queue.PopUrl()
+func (urlFrontier *UrlFrontier) AddAllUrls(urls []string) error {
+	for _, url := range urls {
+		urlFrontier.AddUrl(url)
+	}
 	return nil
 }
 
-func (url_frontier *UrlFrontier) Size() (int, error) {
-	return url_frontier.queue.Size()
+func (urlFrontier *UrlFrontier) PopUrl() (string, error) {
+	return urlFrontier.queue.PopUrl()
+}
+
+func (urlFrontier *UrlFrontier) Size() (int, error) {
+	return urlFrontier.queue.Size()
+}
+
+func (urlFrontier *UrlFrontier) IsEmpty() bool {
+	size, _ := urlFrontier.Size()
+	return size == 0
 }

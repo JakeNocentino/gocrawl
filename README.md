@@ -8,10 +8,27 @@ This project is written in GoLang. To install GoLang, visit this [webpage](https
 
 ### Quickstart
 
-Web crawler functionality currently is not yet complete. To run what exists (initializing a queue for URLs, crawling a single seed URL):
+To run the current main program, run:
 
 ```bash
 cd cmd/gocrawl
 go build gocrawl.go
-sudo ./gocrawl
+./gocrawl
 ```
+
+Future README improvements will describe how to use the library itself within your Go code.
+
+### Improvements
+Below is a list of future improvements, loosely ordered from highest priority to lowest priority:
+
+1. Add delay between requests to become a more polite web crawler (UrlFrontier component).
+2. Parallelize the web crawler using goroutines.
+3. Find a better way to save and access the crawled HTML pages rather than saving as a local file.
+4. Add UrlFilter component to define more ways to filter out URLs. Move the `visited` map here from UrlFrontier when complete.
+5. Add prioritization into how we select URLs to crawl (UrlFrontier component).
+6. Add Robots.txt support (HtmlDownloader component).
+7. Better error handling and logging.
+8. Add support for benchmarking and metrics collection.
+9. Make user experience more robust.
+10. Add check for content seen before URL seen, since sometimes content between different URLs can be the same.
+11. Add caching component.
