@@ -3,6 +3,7 @@ package parser
 import (
 	"bytes"
 	"fmt"
+	"errors"
 	"net/http"
 	"net/url"
 	"golang.org/x/net/html"
@@ -47,13 +48,14 @@ func (htmlParser *HtmlParser) Parse(content []byte, baseUrl string) ([]string, e
 	reader := bytes.NewReader(content)
 	tokenizer := html.NewTokenizer(reader)
 
-	fmt.Printf("Hi\n")
-
 	for {
 		tokenType := tokenizer.Next()
 		switch tokenType {
 		case html.ErrorToken:
-			fmt.Printf("Error: %s\n", tokenizer.Err())
+			if tokenizer.Err().Error() != "EOF" {
+				fmt.Printf("Error parsing content: %s\n", tokenizer.Err().Error())
+				return nil, errors.New("Error parsing content: " + tokenizer.Err().Error())
+			}
 			return links, nil
 		case html.StartTagToken:
 			token := tokenizer.Token()
@@ -69,7 +71,6 @@ func (htmlParser *HtmlParser) Parse(content []byte, baseUrl string) ([]string, e
 								link = u.ResolveReference(u).String()
 							}
 						}
-						fmt.Printf("Link: %s\n", link)
 						links = append(links, link)
 					}
 				}

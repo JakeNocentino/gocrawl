@@ -77,8 +77,6 @@ func (html_downloader *HtmlDownloader) Download(url string) ([]byte, error) {
 		return nil, errors.New("Error creating new file: " + err.Error())
 	}
 
-	fmt.Printf("Response written to %s", fmt.Sprintf("%s/html%d.txt", html_downloader.dirPath, html_downloader.numDownloads))
-
 	html_downloader.numDownloads++
 
 	return body, nil
